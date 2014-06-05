@@ -1,0 +1,19 @@
+0 ICON "togglehidden.ico"
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "LegalCopyright", "Renato Silva"
+            VALUE "ProductName", "Toggle Hidden Files"
+            VALUE "ProductVersion", "2014.6.3"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

@@ -11,7 +11,7 @@ Usage: screenwrite [initial text]
 
 
 Development notes:
-    * Automated JAR buid requires Eclipse.
+    * Automated JAR build requires Eclipse.
     * Automated Windows build requires Eclipse and the WinRun4J plug-in.
     * Manual build:
         1. Compile

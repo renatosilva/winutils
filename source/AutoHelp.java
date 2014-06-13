@@ -1,5 +1,5 @@
 /*
- * Auto Help 2014.4.25
+ * Auto Help 2014.6.13
  * Copyright (c) 2014 Renato Silva
  * GNU GPLv2 licensed
  */
@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
  * A simple helper for handling the <code>--help</code> option of the
  * application, using the following approach. First, {@link #build(String)
  * the build method} should be called <i>at build time</i> in order to process
- * the {@value #README_FILE}} file, placed in the current working directory.
+ * the {@value #README_FILE} file, placed in the current working directory.
  * This file should contain the help text at the top, separated from the other
- * sections (such as build instructions or change logs) by a double line break.
+ * sections (such as build instructions or change logs) by a double line break.<p>
  *
  * The idea is that the help text and the readme file usually share common
  * project information (version, copyright, license, description, usage,
- * options), and this tool allows it to be specified in one single place.
+ * options), and this tool allows it to be specified in one single place.<p>
  *
  * Then, at run time, the object can be instantiated for then parsing the
  * command line arguments and possibly displaying the help text.

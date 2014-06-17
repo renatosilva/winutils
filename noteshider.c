@@ -1,5 +1,5 @@
 /*
- * Sticky Notes Taskbar Icon Hider 2014.6.11
+ * Sticky Notes Icon Hider 2014.6.17
  * Copyright (c) 2014 Renato Silva
  * GNU GPLv2 licensed
  *
@@ -13,8 +13,15 @@ BOOL IsClass(HWND handle, const char* targetClass) {
 }
 
 BOOL HideStickyNotes(HWND window, LPARAM param) {
+
+	// Hide from taskbar
 	if (IsClass(window, "Sticky_Notes_Top_Window"))
 		ShowWindow(window, SW_HIDE);
+
+	// Hide from application list in task manager
+	else if (IsClass(window, "Sticky_Notes_Note_Window"))
+		SetWindowText(window, NULL);
+
 	return TRUE;
 }
 

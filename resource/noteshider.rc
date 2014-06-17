@@ -9,7 +9,7 @@ BEGIN
         BEGIN
             VALUE "LegalCopyright", "Renato Silva"
             VALUE "ProductName", "Sticky Notes Taskbar Icon Hider"
-            VALUE "ProductVersion", "2014.6.11"
+            VALUE "ProductVersion", "2014.6.17"
         END
     END
     BLOCK "VarFileInfo"

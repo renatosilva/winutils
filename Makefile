@@ -13,5 +13,5 @@ all:
 	windres resource/sendtray.rc -O coff -o sendtray.res
 
 	gcc -c sendtray.c -std=c99 -D_WIN32_IE=0x501 -DNIN_SELECT="(WM_USER+0)"
-	gcc sendtray.o -o "${outdir}/sendtray.exe" -mwindows sendtray.res "${outdir}/sendtray.dll" /mingw/lib/libintl.a /mingw/lib/libiconv.a
+	gcc sendtray.o -o "${outdir}/sendtray.exe" -mwindows sendtray.res "${outdir}/sendtray.dll" -lshlwapi /mingw/lib/libintl.a /mingw/lib/libiconv.a
 	rm sendtray.res sendtray.a sendtray.o sendtrayhook.o

@@ -6,11 +6,12 @@
  *
  */
 #include <windows.h>
+#include <shlwapi.h>
 #include <libintl.h>
 #include <locale.h>
 #include "sendtray.h"
 
-#define VERSION "2014.6.16"
+#define VERSION "2014.6.17"
 #define _(STRING) gettext(STRING)
 #define MAXTRAYITEMS 64
 
@@ -240,12 +241,19 @@ LRESULT CALLBACK HookWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
+TCHAR* GetLocaleDirectory() {
+	static TCHAR path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	PathRemoveFileSpec(path);
+	return strncat(path, "\\locale", MAX_PATH);
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int iCmdShow) {
 	WNDCLASS wc;
 	MSG msg;
 
 	setlocale(LC_ALL, "");
-	bindtextdomain("sendtray", "locale");
+	bindtextdomain("sendtray", GetLocaleDirectory());
 	textdomain("sendtray");
 
 	_hwndHook = FindWindow(HOOK_NAME, HOOK_NAME);

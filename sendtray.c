@@ -176,7 +176,7 @@ void ShowAboutInfo() {
 	parameters.lpszIcon = MAKEINTRESOURCE(0);
 	parameters.dwContextHelpId = (DWORD_PTR) NULL;
 	parameters.lpfnMsgBoxCallback = NULL;
-	parameters.dwLanguageId = LANG_NEUTRAL;
+	parameters.dwLanguageId = MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT);
 	MessageBoxIndirect(&parameters);
 }
 

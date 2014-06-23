@@ -14,6 +14,7 @@
 #include "sendtray.h"
 
 #define VERSION "2014.6.22"
+#define NAME "SendTray"
 #define _(STRING) gettext(STRING)
 #define MAXTRAYITEMS 64
 
@@ -140,7 +141,7 @@ void ExecuteMenu() {
 
 	hMenu = CreatePopupMenu();
 	if (!hMenu) {
-		MessageBox(NULL, _("Error creating menu."), "SendTray", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, _("Error creating menu."), NAME, MB_OK | MB_ICONERROR);
 		return;
 	}
 	AppendMenu(hMenu, MF_STRING, IDM_ABOUT,   _("About SendTray"));
@@ -170,7 +171,7 @@ void ShowAboutInfo() {
 	parameters.hwndOwner = NULL;
 	parameters.hInstance = GetModuleHandle(NULL);
 	parameters.lpszText = text;
-	parameters.lpszCaption = "SendTray";
+	parameters.lpszCaption = NAME;
 	parameters.dwStyle = MB_USERICON;
 	parameters.lpszIcon = MAKEINTRESOURCE(0);
 	parameters.dwContextHelpId = (DWORD_PTR) NULL;
@@ -269,16 +270,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 			SendMessage(_hwndHook, WM_CLOSE, 0, 0);
 		}
 		else {
-			MessageBox(NULL, _("SendTray is already running."), "SendTray", MB_OK | MB_ICONINFORMATION);
+			MessageBox(NULL, _("SendTray is already running."), NAME, MB_OK | MB_ICONINFORMATION);
 		}
 		return 0;
 	}
 	if (!(_hLib = LoadLibrary("SendTray.dll"))) {
-		MessageBox(NULL, _("Error loading sendtray.dll."), "SendTray", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, _("Error loading sendtray.dll."), NAME, MB_OK | MB_ICONERROR);
 		return 0;
 	}
 	if (!RegisterHook(_hLib)) {
-		MessageBox(NULL, _("Error setting hook procedure."), "SendTray", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, _("Error setting hook procedure."), NAME, MB_OK | MB_ICONERROR);
 		return 0;
 	}
 	wc.style         = 0;
@@ -292,11 +293,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = HOOK_NAME;
 	if (!RegisterClass(&wc)) {
-		MessageBox(NULL, _("Error registering window class."), "SendTray", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, _("Error registering window class."), NAME, MB_OK | MB_ICONERROR);
 		return 0;
 	}
 	if (!(_hwndHook = CreateWindow(HOOK_NAME, HOOK_NAME, WS_OVERLAPPED, 0, 0, 0, 0, (HWND)NULL, (HMENU)NULL, (HINSTANCE)hInstance, (LPVOID)NULL))) {
-		MessageBox(NULL, _("Error creating window."), "SendTray", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, _("Error creating window."), NAME, MB_OK | MB_ICONERROR);
 		return 0;
 	}
 	for (int i = 0; i < MAXTRAYITEMS; i++) {

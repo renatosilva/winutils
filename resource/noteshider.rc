@@ -1,3 +1,6 @@
+#include <winuser.h>
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "noteshider.manifest.xml"
+
 0 ICON "noteshider.ico"
 1 VERSIONINFO
 FILEVERSION 1,0,0,0
@@ -9,7 +12,7 @@ BEGIN
         BEGIN
             VALUE "LegalCopyright", "Renato Silva"
             VALUE "ProductName", "Sticky Notes Taskbar Icon Hider"
-            VALUE "ProductVersion", "2014.6.17"
+            VALUE "ProductVersion", "2014.7.29"
         END
     END
     BLOCK "VarFileInfo"

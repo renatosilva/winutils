@@ -13,7 +13,7 @@
 #include <locale.h>
 #include "sendtray.h"
 
-#define VERSION "2014.6.22"
+#define VERSION "2014.10.8"
 #define NAME "SendTray"
 #define _(STRING) gettext(STRING)
 #define MAXTRAYITEMS 64

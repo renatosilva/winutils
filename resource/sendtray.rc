@@ -13,7 +13,7 @@ BEGIN
             VALUE "LegalCopyright", "Renato Silva, and original RBTray authors"
             VALUE "FileDescription", "SendTray"
             VALUE "ProductName", "SendTray"
-            VALUE "ProductVersion", "2014.6.22"
+            VALUE "ProductVersion", "2014.10.8"
         END
     END
     BLOCK "VarFileInfo"

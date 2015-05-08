@@ -1,0 +1,53 @@
+# SendTray translation template
+# Copyright (c) 2014 Renato Silva
+# GNU GPLv2 licensed
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-16 19:13-0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "About SendTray"
+msgstr ""
+
+msgid ""
+"Based on RBTray (http://rbtray.sourceforge.net)\n"
+"Copyright (c) 2014 Renato Silva, and others\n"
+"GNU GPLv2 licensed"
+msgstr ""
+
+msgid "Close window"
+msgstr ""
+
+msgid "Error creating menu."
+msgstr ""
+
+msgid "Error creating window."
+msgstr ""
+
+msgid "Error loading sendtray.dll."
+msgstr ""
+
+msgid "Error registering window class."
+msgstr ""
+
+msgid "Error setting hook procedure."
+msgstr ""
+
+msgid "Exit SendTray"
+msgstr ""
+
+msgid "Restore window"
+msgstr ""
+
+msgid "SendTray is already running."
+msgstr ""

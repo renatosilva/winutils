@@ -1,7 +1,7 @@
 /*
  * SendTray
  * Copyright (c) 1998-2011 Original RBTray authors
- *               2014 Renato Silva
+ *               2014, 2015 Renato Silva
  * GNU GPLv2 licensed
  *
  */
@@ -13,7 +13,7 @@
 #include <locale.h>
 #include "sendtray.h"
 
-#define VERSION "2014.10.8"
+#define VERSION "2015.5.21"
 #define NAME "SendTray"
 #define _(STRING) gettext(STRING)
 #define MAXTRAYITEMS 64
@@ -162,7 +162,7 @@ void ExecuteMenu() {
 void ShowAboutInfo() {
 	MSGBOXPARAMS parameters = {0};
 	char* header = "SendTray " VERSION "\n\n";
-	char* body = _("Based on RBTray (http://rbtray.sourceforge.net)\nCopyright (c) 2014 Renato Silva, and others\nGNU GPLv2 licensed");
+	char* body = _("Based on RBTray (http://rbtray.sourceforge.net)\nCopyright (c) 2014, 2015 Renato Silva, and others\nGNU GPLv2 licensed");
 	size_t length = strlen(header) + strlen(body) + 1;
 	char text[length];
 
@@ -265,13 +265,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine
 	InitCommonControlsEx(&icc);
 
 	_hwndHook = FindWindow(HOOK_NAME, HOOK_NAME);
-	if (_hwndHook) {
-		if (strstr(szCmdLine, "--exit")) {
+	if (strstr(szCmdLine, "--exit")) {
+		if (_hwndHook)
 			SendMessage(_hwndHook, WM_CLOSE, 0, 0);
-		}
-		else {
-			MessageBox(NULL, _("SendTray is already running."), NAME, MB_OK | MB_ICONINFORMATION);
-		}
+		return 0;
+	}
+	if (_hwndHook) {
+		MessageBox(NULL, _("SendTray is already running."), NAME, MB_OK | MB_ICONINFORMATION);
 		return 0;
 	}
 	if (!(_hLib = LoadLibrary("SendTray.dll"))) {

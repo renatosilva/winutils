@@ -30,11 +30,13 @@ int handle_request(struct mg_connection *connection, enum mg_event event) {
 		return MG_TRUE;
 
 	if (event == MG_REQUEST) {
-		if (connection->query_string &&
-			!strcmp(connection->uri, "/shutdown") &&
-			!strcmp(connection->query_string, expected_query)) {
-			logoff_and_shutdown();
-			mg_printf_data(connection, "started");
+		if (strcmp(connection->uri, "/shutdown") == 0) {
+			if (connection->query_string && strcmp(connection->query_string, expected_query) == 0) {
+				logoff_and_shutdown();
+				mg_printf_data(connection, "started");
+			} else {
+				mg_printf_data(connection, "denied");
+			}
 		} else {
 			mg_printf_data(connection, "hi");
 		}

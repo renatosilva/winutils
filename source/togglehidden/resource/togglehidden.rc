@@ -8,7 +8,8 @@ BEGIN
         BLOCK "040904E4"
         BEGIN
             VALUE "LegalCopyright", "Renato Silva"
-            VALUE "ProductName", "Toggle Hidden Files"
+            VALUE "FileDescription", "Toggle Hidden"
+            VALUE "ProductName", "Toggle Hidden"
             VALUE "ProductVersion", "2014.6.3"
         END
     END

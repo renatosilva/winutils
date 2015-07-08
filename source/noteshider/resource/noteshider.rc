@@ -11,7 +11,8 @@ BEGIN
         BLOCK "040904E4"
         BEGIN
             VALUE "LegalCopyright", "Renato Silva"
-            VALUE "ProductName", "Sticky Notes Taskbar Icon Hider"
+            VALUE "FileDescription", "Notes Hider"
+            VALUE "ProductName", "Notes Hider"
             VALUE "ProductVersion", "2014.7.29"
         END
     END

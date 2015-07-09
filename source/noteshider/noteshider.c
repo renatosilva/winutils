@@ -1,5 +1,5 @@
 /*
- * Sticky Notes Icon Hider 2014.7.29
+ * Sticky Notes Icon Hider
  * Copyright (c) 2014 Renato Silva
  * GNU GPLv2 licensed
  *
@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	watch = strcmp(command, "--watch") == 0;
 	if (command[0] != '\0' && !watch) {
 		MessageBox(NULL, "Usage: noteshider [options]\n\nWithout options, exit after hiding. "
-		                 "With --watch, keep running.", "Notes Hider",MB_OK | MB_ICONERROR);
+		                 "With --watch, keep running.", "Notes Hider", MB_OK | MB_ICONERROR);
 		return EXIT_FAILURE;
 	}
 

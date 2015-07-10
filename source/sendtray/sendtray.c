@@ -13,7 +13,6 @@
 #include <locale.h>
 #include "sendtray.h"
 
-#define VERSION "2015.5.21"
 #define NAME "SendTray"
 #define _(STRING) gettext(STRING)
 #define MAXTRAYITEMS 64
@@ -161,7 +160,7 @@ void ExecuteMenu() {
 
 void ShowAboutInfo() {
 	MSGBOXPARAMS parameters = {0};
-	char* header = "SendTray " VERSION "\n\n";
+	char* header = "SendTray " APP_VERSION "\n\n";
 	char* body = _("Based on RBTray (http://rbtray.sourceforge.net)\nCopyright (c) 2014, 2015 Renato Silva, and others\nGNU GPLv2 licensed");
 	size_t length = strlen(header) + strlen(body) + 1;
 	char text[length];

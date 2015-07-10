@@ -1,4 +1,5 @@
 #include <winuser.h>
+#include "sendtray.h"
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "sendtray.manifest.xml"
 
 0 ICON "sendtray.ico"
@@ -13,7 +14,7 @@ BEGIN
             VALUE "LegalCopyright", "Renato Silva, and original RBTray authors"
             VALUE "FileDescription", "SendTray"
             VALUE "ProductName", "SendTray"
-            VALUE "ProductVersion", "2015.5.21"
+            VALUE "ProductVersion", APP_VERSION
         END
     END
     BLOCK "VarFileInfo"

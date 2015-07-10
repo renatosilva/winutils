@@ -1,5 +1,5 @@
 /*
- * Toggle Hidden Files 2014.6.3
+ * Toggle Hidden Files
  * Copyright (c) 2014 Renato Silva
  * GNU GPLv2 licensed
  *

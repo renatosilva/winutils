@@ -20,7 +20,7 @@ Add the `CTRL + H` shortcut to Windows Explorer for quickly toggling the hidden 
 
 ## Screen Write
 
-Print standard input to the screen. This program can be used in command-line scripting as graphical replacement for console windows. Java is required.
+Print standard input to the screen. This program can be used in command-line scripting as graphical replacement for console windows.
 
 ## License and copyright
 

@@ -1,8 +1,5 @@
 outdir := .
 all:
-	javac source/*.java build/*.java
-	mv source/*.class build/*.class .
-	java HelpBuilder .
-	jar cvfe screenwrite.jar ScreenWrite ScreenWrite*.class AutoHelp.class help.*
-	java WindowsBuilder "$(ECLIPSE_HOME)" build/screenwrite.ico build/winrun4j.ini screenwrite.jar "${outdir}/screenwrite.exe"
-	rm -rf *.class *.jar help.*
+	windres -I. resource/screenwrite.rc -O coff -o screenwrite.res
+	gcc -g screenwrite.res screenwrite.c -std=c99 -Wl,--subsystem,windows -lcomctl32 -lgdi32 -o "${outdir}/screenwrite.exe"
+	rm screenwrite.res

@@ -9,18 +9,9 @@ endif
 all:
 	make -C noteshider
 	make -C togglehidden
+	make -C screenwrite
 	make -C webshutdown
 
 	make -C sendtray
 	cp $(MINGW_PREFIX)/bin/$(LIBGCC) ../build
 	cp $(MINGW_PREFIX)/bin/libwinpthread-1.dll ../build
-
-ifeq ($(ARCHITECTURE), i686)
-ifdef ECLIPSE_HOME
-	make -C screenwrite
-else
-	@echo warning: skipping screenwrite, no Eclipse home specified
-endif
-else
-	@echo warning: skipping screenwrite on $(ARCHITECTURE)
-endif

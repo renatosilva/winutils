@@ -9,7 +9,6 @@
 #include <commctrl.h>
 #include "version.h"
 
-#define MAX_LINE 1024
 #define CENTERED LONG_MIN
 #define APP_HELP APP_NAME " " APP_VERSION "\n" APP_COPYRIGHT "\n" APP_LICENSE "\n\n" \
                  "This program prints standard input to the screen. " \
@@ -31,7 +30,7 @@ static BOOL sleeping = FALSE;
 static BOOL taskbar = FALSE;
 static BOOL antialiasing = TRUE;
 static BOOL font_italic = FALSE;
-static char current_line[MAX_LINE];
+static char *current_line = NULL;
 static char *font_name = "Segoe UI Semilight";
 static int font_weight = FW_NORMAL;
 static int font_color = 0xd8d8d8;
@@ -65,6 +64,8 @@ static void draw_text(HDC context, RECT rectangle) {
 	UINT format = DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS;
 	char *line = current_line;
 
+	if (!line)
+		return;
 	if (top == CENTERED) {
 		RECT text = rectangle;
 		int rectangle_height = rectangle.bottom - rectangle.top;
@@ -88,6 +89,8 @@ static void draw_text(HDC context, RECT rectangle) {
 		}
 	}
 	DrawText(context, line, -1, &rectangle, format | DT_NOCLIP);
+	free(current_line);
+	current_line = NULL;
 }
 
 static void update_window(HWND window) {
@@ -153,8 +156,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 			!get_number_option(__argv[index], "left",         &left)         &&
 			!get_number_option(__argv[index], "taskbar",      &taskbar)      &&
 			!get_number_option(__argv[index], "antialiasing", &antialiasing) &&
-			!current_line[0])
-			snprintf(current_line, MAX_LINE, "%s", __argv[index]);
+			!current_line)
+			asprintf(&current_line, "%s", __argv[index]);
 	}
 
 	class.hInstance     = instance;
@@ -176,7 +179,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	font = CreateFont(font_size, 0, 0, 0, font_weight, font_italic, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, antialiasing? CLEARTYPE_QUALITY : NONANTIALIASED_QUALITY, DEFAULT_PITCH, font_name);
 	SetLayeredWindowAttributes(window, 0, 0, LWA_COLORKEY);
 	ShowWindow(window, SW_MAXIMIZE);
-	if (current_line[0])
+	if (current_line)
 		update_window(window);
 
 	while (message.message != WM_QUIT) {
@@ -192,7 +195,6 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 		if (!has_input)
 			continue;
 
-		index = 0;
 		while (TRUE) {
 			char character;
 			read_result = read(STDIN_FILENO, &character, 1);
@@ -202,11 +204,10 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 				return EXIT_SUCCESS;
 			if (character == '\n' || character == '\r')
 				break;
-			current_line[index] = character;
-			if (++index == (MAX_LINE - 1))
-				break;
+			char *old_current_line = current_line;
+			asprintf(&current_line, "%s%c", current_line? current_line : "", character);
+			free(old_current_line);
 		}
-		current_line[index] = '\0';
 		GetWindowRect(window, &rectangle);
 		InvalidateRect(window, &rectangle, TRUE);
 		update_window(window);

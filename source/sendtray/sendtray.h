@@ -1,4 +1,4 @@
-#define APP_VERSION "2015.5.21"
+#define APP_VERSION "2015.7.18"
 
 #define WM_ADDTRAY  0x0401
 #define WM_REMTRAY  0x0402

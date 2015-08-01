@@ -10,12 +10,17 @@
 #include "version.h"
 
 #define CENTERED LONG_MIN
+#define NO_COLOR LONG_MIN
+#define RGB_COLOR(integer) RGB(integer >> 16, integer >> 8, integer)
+#define TRANSPARENT_COLOR(color) (color == 0x000000)
+#define BACKGROUND_COLOR(color) (color == NO_COLOR? TRANSPARENT_COLOR(color) : RGB_COLOR(color))
+
 #define APP_HELP APP_NAME " " APP_VERSION "\n" APP_COPYRIGHT "\n" APP_LICENSE "\n\n" \
                  "This program prints standard input to the screen. " \
                  "Output from other programs can be redirected, and screen will keep displaying the current line. " \
                  "Lines beginning with [header] are split in two before printing.\n\n" \
-                 "Usage: screenwrite [font=NAME] [size=NUMBER] [color=0xRGB] [weight=NUMBER] [italic=1] [top=POSITION] [left=POSITION] " \
-                 "[delay=MILLISECONDS] [taskbar=1] [antialiasing=0] [initial text]"
+                 "Usage: screenwrite [font=NAME] [size=NUMBER] [color=0xRGB] [background=0xRGB] [weight=NUMBER] [italic=1] " \
+                 "[top=POSITION] [left=POSITION] [delay=MILLISECONDS] [taskbar=1] [antialiasing=0] [initial text]"
 
 #define FAILURE_HELP                 100
 #define FAILURE_CANCELED             101
@@ -33,6 +38,7 @@ static BOOL font_italic = FALSE;
 static char *current_line = NULL;
 static char *font_name = "Segoe UI Semilight";
 static int font_weight = FW_NORMAL;
+static int background = NO_COLOR;
 static int font_color = 0xd8d8d8;
 static int font_size = 36;
 static int left = CENTERED;
@@ -110,10 +116,10 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARA
 		case WM_PAINT:
 			BeginPaint(window, &paint);
 			context = paint.hdc;
-			SetBkColor(context, 0);
+			SetBkColor(context, BACKGROUND_COLOR(background));
 			SetBkMode(context, OPAQUE);
 			SelectObject(context, font);
-			SetTextColor(context, RGB(font_color >> 16, font_color >> 8, font_color));
+			SetTextColor(context, RGB_COLOR(font_color));
 			GetWindowRect(window, &rectangle);
 			draw_text(context, rectangle);
 			EndPaint(window, &paint);
@@ -155,6 +161,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 			!get_number_option(__argv[index], "top",          &top)          &&
 			!get_number_option(__argv[index], "left",         &left)         &&
 			!get_number_option(__argv[index], "taskbar",      &taskbar)      &&
+			!get_number_option(__argv[index], "background",   &background)   &&
 			!get_number_option(__argv[index], "antialiasing", &antialiasing) &&
 			!current_line)
 			asprintf(&current_line, "%s", __argv[index]);
@@ -163,7 +170,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	class.hInstance     = instance;
 	class.lpszClassName = APP_NAME;
 	class.lpfnWndProc   = &WindowProcedure;
-	class.hbrBackground = CreateSolidBrush(0);
+	class.hbrBackground = CreateSolidBrush(BACKGROUND_COLOR(background));
 	class.hIcon         = (HICON) LoadImage(instance, MAKEINTRESOURCE(0), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_DEFAULTCOLOR | LR_SHARED);
 	class.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	class.style         = CS_HREDRAW | CS_VREDRAW;
@@ -177,7 +184,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 		return FAILURE_CREATING_WINDOW;
 
 	font = CreateFont(font_size, 0, 0, 0, font_weight, font_italic, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, antialiasing? CLEARTYPE_QUALITY : NONANTIALIASED_QUALITY, DEFAULT_PITCH, font_name);
-	SetLayeredWindowAttributes(window, 0, 0, LWA_COLORKEY);
+	SetLayeredWindowAttributes(window, TRANSPARENT_COLOR(background), 0, LWA_COLORKEY);
 	ShowWindow(window, SW_MAXIMIZE);
 	if (current_line)
 		update_window(window);

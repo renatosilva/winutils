@@ -3,7 +3,9 @@
  * Licensed under GNU GPLv2
  */
 
+#define _GNU_SOURCE
 #include <stdio.h>
+#include <libgen.h>
 #include <windows.h>
 #include <mongoose.h>
 #include "version.h"

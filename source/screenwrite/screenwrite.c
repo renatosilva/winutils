@@ -9,6 +9,8 @@
 #include <commctrl.h>
 #include "version.h"
 
+#define DELAY_TIMER 1
+#define CURSOR_TIMER 2
 #define CENTERED LONG_MIN
 #define NO_COLOR LONG_MIN
 #define RGB_COLOR(integer) RGB(integer >> 16, integer >> 8, integer)
@@ -20,7 +22,7 @@
                  "Output from other programs can be redirected, and screen will keep displaying the current line. " \
                  "Lines beginning with [header] are split in two before printing.\n\n" \
                  "Usage: screenwrite [font=NAME] [size=NUMBER] [color=0xRGB] [background=0xRGB] [weight=NUMBER] [italic=1] " \
-                 "[top=POSITION] [left=POSITION] [delay=MILLISECONDS] [taskbar=1] [antialiasing=0] [initial text]"
+                 "[top=POSITION] [left=POSITION] [delay=MILLISECONDS] [cursor=MILLISECONDS] [taskbar=1] [antialiasing=0] [initial text]"
 
 #define FAILURE_HELP                 100
 #define FAILURE_CANCELED             101
@@ -31,6 +33,7 @@
 
 static HFONT font;
 static WNDCLASS class;
+static POINT cursor_position;
 static ssize_t read_result;
 static BOOL sleeping = FALSE;
 static BOOL taskbar = FALSE;
@@ -44,6 +47,7 @@ static int font_color = 0xd8d8d8;
 static int font_size = 36;
 static int left = CENTERED;
 static int top = CENTERED;
+static int cursor = 1000;
 static int delay = 0;
 
 static BOOL get_string_option(char *argument, const char *option, char **value) {
@@ -104,13 +108,15 @@ static void update_window(HWND window) {
 	UpdateWindow(window);
 	if (!delay)
 		return;
-	SetTimer(window, 1, delay, NULL);
+	SetTimer(window, DELAY_TIMER, delay, NULL);
 	sleeping = TRUE;
 }
 
 LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
 	int window_width;
 	int window_height;
+	BOOL mouse_moved;
+	BOOL show_cursor;
 	HGDIOBJ replaced;
 	HBITMAP bitmap;
 	PAINTSTRUCT paint;
@@ -141,7 +147,20 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARA
 			EndPaint(window, &paint);
 			break;
 		case WM_TIMER:
-			sleeping = FALSE;
+			switch (wParam) {
+				case DELAY_TIMER: sleeping = FALSE; break;
+				case CURSOR_TIMER: SetCursor(NULL); break;
+			}
+			break;
+		case WM_MOUSEMOVE:
+			mouse_moved = cursor_position.x != MAKEPOINTS(lParam).x ||
+			              cursor_position.y != MAKEPOINTS(lParam).y;
+			show_cursor = cursor < 0 || (cursor && mouse_moved);
+			if (show_cursor && cursor > 0)
+				SetTimer(window, CURSOR_TIMER, cursor, NULL);
+			SetCursor(show_cursor? LoadCursor(NULL, IDC_ARROW) : NULL);
+			cursor_position.x = MAKEPOINTS(lParam).x;
+			cursor_position.y = MAKEPOINTS(lParam).y;
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(FAILURE_CANCELED);
@@ -172,6 +191,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 			!get_number_option(__argv[index], "color",        &font_color)   &&
 			!get_number_option(__argv[index], "weight",       &font_weight)  &&
 			!get_number_option(__argv[index], "italic",       &font_italic)  &&
+			!get_number_option(__argv[index], "cursor",       &cursor)       &&
 			!get_number_option(__argv[index], "delay",        &delay)        &&
 			!get_number_option(__argv[index], "top",          &top)          &&
 			!get_number_option(__argv[index], "left",         &left)         &&
@@ -187,7 +207,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	class.lpfnWndProc   = &WindowProcedure;
 	class.hbrBackground = CreateSolidBrush(BACKGROUND_COLOR(background));
 	class.hIcon         = (HICON) LoadImage(instance, MAKEINTRESOURCE(0), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_DEFAULTCOLOR | LR_SHARED);
-	class.hCursor       = LoadCursor(NULL, IDC_ARROW);
+	class.hCursor       = NULL;
 	class.style         = CS_HREDRAW | CS_VREDRAW;
 	class.lpszMenuName  = NULL;
 	class.cbClsExtra    = 0;
@@ -201,6 +221,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	font = CreateFont(font_size, 0, 0, 0, font_weight, font_italic, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, antialiasing? CLEARTYPE_QUALITY : NONANTIALIASED_QUALITY, DEFAULT_PITCH, font_name);
 	SetLayeredWindowAttributes(window, TRANSPARENT_COLOR(background), 0, LWA_COLORKEY);
 	ShowWindow(window, SW_MAXIMIZE);
+	GetCursorPos(&cursor_position);
 	if (current_line)
 		update_window(window);
 

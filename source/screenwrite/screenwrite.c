@@ -30,6 +30,7 @@
 #define FAILURE_READING_INPUT        105
 
 static HFONT font;
+static WNDCLASS class;
 static ssize_t read_result;
 static BOOL sleeping = FALSE;
 static BOOL taskbar = FALSE;
@@ -108,6 +109,10 @@ static void update_window(HWND window) {
 }
 
 LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+	int window_width;
+	int window_height;
+	HGDIOBJ replaced;
+	HBITMAP bitmap;
 	PAINTSTRUCT paint;
 	RECT rectangle;
 	HDC context;
@@ -115,13 +120,24 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARA
 	switch (message) {
 		case WM_PAINT:
 			BeginPaint(window, &paint);
-			context = paint.hdc;
+			context = CreateCompatibleDC(paint.hdc);
+			GetWindowRect(window, &rectangle);
+			window_width = rectangle.right - rectangle.left;
+			window_height = rectangle.bottom - rectangle.top;
+			bitmap = CreateCompatibleBitmap(paint.hdc, window_width, window_height);
+			replaced = SelectObject(context, bitmap);
+
+			FillRect(context, &rectangle, class.hbrBackground);
 			SetBkColor(context, BACKGROUND_COLOR(background));
 			SetBkMode(context, OPAQUE);
 			SelectObject(context, font);
 			SetTextColor(context, RGB_COLOR(font_color));
-			GetWindowRect(window, &rectangle);
 			draw_text(context, rectangle);
+
+			BitBlt(paint.hdc, 0, 0, window_width, window_height, context, 0, 0, SRCCOPY);
+			SelectObject(context, replaced);
+			DeleteObject(bitmap);
+			DeleteDC(context);
 			EndPaint(window, &paint);
 			break;
 		case WM_TIMER:
@@ -139,7 +155,6 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 	INITCOMMONCONTROLSEX controls;
 	DWORD has_input;
 	RECT rectangle;
-	WNDCLASS class;
 	HWND window;
 	MSG message;
 
@@ -216,7 +231,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int sh
 			free(old_current_line);
 		}
 		GetWindowRect(window, &rectangle);
-		InvalidateRect(window, &rectangle, TRUE);
+		InvalidateRect(window, &rectangle, FALSE);
 		update_window(window);
 	}
 	return message.wParam;

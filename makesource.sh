@@ -7,7 +7,7 @@
 packages=(gcc-libs::gcc
           gettext
           libiconv
-          libmongoose-git
+          libmongoose
           libwinpthread-git::winpthreads-git)
 
 package_architecture=$(gcc -dumpmachine)

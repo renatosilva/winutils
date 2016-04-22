@@ -2,7 +2,7 @@
 # Copyright (C) 2015 Renato Silva
 
 Name "WinUtils"
-!define VERSION "15.1"
+!define VERSION "16.1"
 RequestExecutionLevel admin
 InstallDirRegKey HKLM Software\WinUtils Install_Dir
 !if ${NSIS_PTR_SIZE} = 8

@@ -1,12 +1,11 @@
 outdir := .
 
-defines = -DMONGOOSE_NO_AUTH \
-          -DMONGOOSE_NO_CGI \
-          -DMONGOOSE_NO_DAV \
-          -DMONGOOSE_NO_WEBSOCKET \
-          -DMONGOOSE_NO_DIRECTORY_LISTING \
-          -DMONGOOSE_NO_FILESYSTEM \
-          -DMONGOOSE_NO_USER
+defines = -DMG_DISABLE_HTTP_DIGEST_AUTH \
+          -DMG_DISABLE_CGI \
+          -DMG_DISABLE_DAV \
+          -DMG_DISABLE_HTTP_WEBSOCKET \
+          -DMG_DISABLE_DIRECTORY_LISTING \
+          -DMG_DISABLE_FILESYSTEM
 
 all: static
 

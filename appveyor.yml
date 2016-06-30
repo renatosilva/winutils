@@ -1,0 +1,27 @@
+artifacts:
+    - path: '*.exe'
+    - path: '*.zip'
+
+build_script:
+    # Update
+    - C:\msys64\usr\bin\bash -lc "pacman --noconfirm --sync --refresh --sysupgrade --sysupgrade" # Core
+    - C:\msys64\usr\bin\bash -lc "pacman --noconfirm --sync --refresh --sysupgrade --sysupgrade" # Rest
+
+    # Dependencies
+    - C:\msys64\usr\bin\bash -lc "pacman --noconfirm --sync --needed mingw-w64-{i686,x86_64}-{libmongoose,gettext,libiconv}"
+    - C:\msys64\usr\bin\bash -lc "pacman --noconfirm --sync --needed mingw-w64-{i686,x86_64}-{nsis,discount} zip"
+
+    # Build
+    - C:\msys64\usr\bin\bash -lc "source shell mingw32 && cd $(cygpath ${APPVEYOR_BUILD_FOLDER}) && make"
+    - C:\msys64\usr\bin\bash -lc "source shell mingw64 && cd $(cygpath ${APPVEYOR_BUILD_FOLDER}) && make"
+
+deploy:
+    provider: GitHub
+    description: ''
+    prerelease: false
+    draft: false
+    auth_token:
+        secure: L1oxhKU03o7jGEclmHmCIF8LvBKSfPNF7xmMDOrqRbh5twUVnDcqHGM4mhqx9cTB
+    on:
+        branch: master
+        appveyor_repo_tag: true

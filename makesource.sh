@@ -15,7 +15,7 @@ package_architecture="${package_architecture%%-*}"
 architecture="${package_architecture/x86_64/x64}"
 architecture="${architecture/i686/x86}"
 app_version=$(grep 'define VERSION' winutils.nsi | awk -F'"' '{ printf $2 }')
-zip_file="WinUtils ${app_version} ${architecture} Source.zip"
+zip_file="WinUtils-${app_version}-${architecture}-Source.zip"
 libraries="libraries/${architecture}"
 mkdir -p "${libraries}"
 

@@ -7,11 +7,11 @@ RequestExecutionLevel admin
 InstallDirRegKey HKLM Software\WinUtils Install_Dir
 !if ${NSIS_PTR_SIZE} = 8
     InstallDir "$PROGRAMFILES64\WinUtils"
-    OutFile "WinUtils ${VERSION} x64 Setup.exe"
+    OutFile "WinUtils-${VERSION}-x64-Setup.exe"
     !define BITNESS "64-bit"
 !else
     InstallDir "$PROGRAMFILES32\WinUtils"
-    OutFile "WinUtils ${VERSION} x86 Setup.exe"
+    OutFile "WinUtils-${VERSION}-x86-Setup.exe"
     !define BITNESS "32-bit"
 !endif
 
